@@ -9,7 +9,7 @@ RUN curl https://sdk.cloud.google.com > install.sh && \
     rm install.sh
 ENV PATH="/root/google-cloud-sdk/bin:${PATH}"
 # Copy scripts and launch Python server
-COPY mongo-backup.sh .
-RUN chmod +x mongo-backup.sh
+COPY mongo-backups.sh .
+RUN chmod +x mongo-backups.sh
 COPY server.py .
 ENTRYPOINT ["/usr/bin/python3", "server.py"]

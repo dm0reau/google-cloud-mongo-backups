@@ -2,7 +2,7 @@ from subprocess import check_output, CalledProcessError
 from http.server import HTTPServer, BaseHTTPRequestHandler
 
 port = 8080
-script_path = './mongo-backup.sh' 
+script_path = './mongo-backups.sh' 
 
 class BashScriptHTTPRequestHandler(BaseHTTPRequestHandler):
   def do_GET(self):
