@@ -1,26 +1,37 @@
 #!/bin/sh
 
-# Backup directory
-BACKUPS_DIR="/backups/$MONGO_DBNAME"
-TIMESTAMP=`date +%F-%H%M`
+DATE_FORMAT="+%F-%H%M"
+TIMESTAMP=`date $DATE_FORMAT`
+OLD_BACKUP_TIMESTAMP=`date --date="${RETENTION_DAYS} days ago" $DATE_FORMAT`
 BACKUP_NAME="$MONGO_DBNAME-$TIMESTAMP"
+OLD_BACKUP_NAME="$MONGO_DBNAME-$OLD_BACKUP_TIMESTAMP"
+BACKUP_ARCHIVE_NAME=$BACKUP_NAME.tar.gz
+GCLOUD_CONFIG_FILE_PATH="/root/.config/gcloud/configurations/config_default"
+GCLOUD_KEY_FILE_PATH="key_file.json"
+
+if ! `grep -Fxq project $GCLOUD_CONFIG_FILE_PATH`;then
+  echo "Configuring Google Cloud SDK"
+  echo -n $GCLOUD_KEY_FILE | base64 -d > $GCLOUD_KEY_FILE_PATH
+  gcloud auth activate-service-account --key-file=$GCLOUD_KEY_FILE_PATH
+  gcloud config set project $GCLOUD_PROJECT_ID
+  rm $GCLOUD_KEY_FILE_PATH
+fi
 
 echo "Performing backup of $MONGO_DBNAME"
-echo "--------------------------------------------"
-# Create backup directory
-if ! mkdir -p $BACKUPS_DIR; then
-  echo "Can't create backup directory in $BACKUPS_DIR. Go and fix it!" 1>&2
-  exit 1;
-fi;
 # Create dump
 mongodump --uri="${MONGO_URI}"
-du -hs dump
 # Rename dump
 mv dump $BACKUP_NAME
 # Compress backup
-tar -czvf $BACKUPS_DIR/$BACKUP_NAME.tar.gz $BACKUP_NAME
-# Delete uncompressed backup
-rm -rf $BACKUP_NAME
-# TODO Delete backups older than retention period
-echo "--------------------------------------------"
+tar -czvf $BACKUP_ARCHIVE_NAME $BACKUP_NAME
+# Upload archive to Google Cloud
+echo "Uploading gs://$GCLOUD_BUCKET_NAME/$OLD_BACKUP_NAME"
+gsutil cp $BACKUP_ARCHIVE_NAME gs://$GCLOUD_BUCKET_NAME
+# Delete backup files
+rm -rf $BACKUP_NAME $BACKUP_ARCHIVE_NAME
+# Delete backups older than retention period on Google Cloud
+if `gsutil -q stat gs://$GCLOUD_BUCKET_NAME/$OLD_BACKUP_NAME`;then
+  echo "Deleting gs://$GCLOUD_BUCKET_NAME/$OLD_BACKUP_NAME"
+  gsutil rm gs://$GCLOUD_BUCKET_NAME/$OLD_BACKUP_NAME
+fi
 echo "Database backup complete!"

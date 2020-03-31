@@ -3,9 +3,17 @@
 # backups, MongoDB & Google Cloud Storage credentials
 ##
 
-# Days to keep the backup
-DAYSTORETAINBACKUP=30
+# Days to keep the backups
+RETENTION_DAYS=30
+
 # MongoDB database name
 MONGO_DBNAME=database
 # MongoDB URI
-MONGO_URI=mongodb://user:password@mongodb0.example.com/database
+MONGO_URI=mongodb+srv://user:password@mongodb0.example.com/database
+
+# Google Cloud service account key file, encoded in base64
+GCLOUD_KEY_FILE=base64key
+# Google Cloud project ID
+GCLOUD_PROJECT_ID=your-project-id
+# Google Cloud Storage bucket name
+GCLOUD_BUCKET_NAME=your-bucket-name
