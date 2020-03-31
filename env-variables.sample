@@ -6,7 +6,7 @@
 # Days to keep the backups
 RETENTION_DAYS=30
 
-# MongoDB database names, separated by commas
+# MongoDB database names, separated by semicolons
 MONGO_DBNAMES=database1;database2
 # MongoDB URI
 MONGO_URI=mongodb+srv://user:password@mongodb0.example.com
