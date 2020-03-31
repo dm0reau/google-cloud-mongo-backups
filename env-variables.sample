@@ -6,10 +6,10 @@
 # Days to keep the backups
 RETENTION_DAYS=30
 
-# MongoDB database name
-MONGO_DBNAME=database
+# MongoDB database names, separated by commas
+MONGO_DBNAMES=database1;database2
 # MongoDB URI
-MONGO_URI=mongodb+srv://user:password@mongodb0.example.com/database
+MONGO_URI=mongodb+srv://user:password@mongodb0.example.com
 
 # Google Cloud service account key file, encoded in base64
 GCLOUD_KEY_FILE=base64key
