@@ -1,0 +1,11 @@
+##
+# Use these environment variables for number of days for keeping
+# backups, MongoDB & Google Cloud Storage credentials
+##
+
+# Days to keep the backup
+DAYSTORETAINBACKUP=30
+# MongoDB database name
+MONGO_DBNAME=database
+# MongoDB URI
+MONGO_URI=mongodb://user:password@mongodb0.example.com/database
