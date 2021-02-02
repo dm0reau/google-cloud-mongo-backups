@@ -1,7 +1,7 @@
 #!/bin/sh
 
-TIMESTAMP=`date +%F-%H%M`
-OLD_BACKUP_TIMESTAMP=`date --date="${RETENTION_DAYS} days ago" +%F`
+DATE=`date +%F`
+OLD_BACKUP_DATE=`date --date="${RETENTION_DAYS} days ago" +%F`
 GCLOUD_CONFIG_FILE_PATH="/root/.config/gcloud/configurations/config_default"
 GCLOUD_KEY_FILE_PATH="key_file.json"
 
@@ -17,8 +17,8 @@ for MONGO_DBNAME in $(echo $MONGO_DBNAMES | tr ";" "\n")
 do
   echo "Performing backup of $MONGO_DBNAME"
   # Backup variables
-  BACKUP_NAME="$MONGO_DBNAME-$TIMESTAMP"
-  OLD_BACKUP_NAME="$MONGO_DBNAME-$OLD_BACKUP_TIMESTAMP*"
+  BACKUP_NAME="$MONGO_DBNAME-$DATE"
+  OLD_BACKUP_NAME="$MONGO_DBNAME-$OLD_BACKUP_DATE*"
   BACKUP_ARCHIVE_NAME=$BACKUP_NAME.tar.gz
   # Create dump
   mongodump --uri="${MONGO_URI}/${MONGO_DBNAME}"
