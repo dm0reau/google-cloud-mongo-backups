@@ -62,7 +62,7 @@ docker push gcr.io/[YOUR-PROJECT-ID]/mongo-backups
 Then, deploy it on [Cloud Run](https://cloud.google.com/run/docs/quickstarts/build-and-deploy) :
 ```
 # Here I use Cloud Run managed platform. Fit it to your needs if you want to run it on GKE for example.
-gcloud beta run deploy mongo-backups --image gcr.io/[YOUR-PROJECT-ID]/mongo-backups --port=8080 --memory 128Mi --concurrency=1 --platform=managed --no-allow-unauthenticated --service-account=[YOUR-SERVICE-ACCOUNT-EMAIL] --set-env-vars="RETENTION_DAYS=30,MONGO_DBNAMES=db1;db2,MONGO_URI='mongodb+srv://user:password@mongodb.example.com',GCLOUD_KEY_FILE=base64key,GCLOUD_PROJECT_ID=your-project-id,GCLOUD_BUCKET_NAME=your-bucket-name"
+gcloud run deploy mongo-backups --image gcr.io/[YOUR-PROJECT-ID]/mongo-backups --port=8080 --memory 256Mi --concurrency=1 --platform=managed --no-allow-unauthenticated --service-account=[YOUR-SERVICE-ACCOUNT-EMAIL] --set-env-vars="RETENTION_DAYS=30,MONGO_DBNAMES=db1;db2,MONGO_URI=mongodb+srv://user:password@mongodb.example.com,GCLOUD_KEY_FILE=base64key,GCLOUD_PROJECT_ID=your-project-id,GCLOUD_BUCKET_NAME=your-bucket-name"
 ```
 
 Now you can perform backups with an URL call. We can schedule it daily with [Scheduler](https://cloud.google.com/scheduler/docs/creating). Here is an example *without* authentication :
